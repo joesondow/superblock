@@ -1,4 +1,4 @@
-// 1.15 Uses a big dark form to block a user from many accounts, redirects to form after, handles some invisible weird characters.
+// 1.16 Uses a big dark form to block a user from many accounts, redirects to form after, skips all non-twitter-handle characters.
 
 var helpers = require(__dirname + "/helpers.js"),
   Twit = require("twit");
@@ -70,14 +70,26 @@ app.get(endpoint, function(req, res) {
 app.post(endpoint, function(req, res) {
   /* See EXAMPLES.js for some example code you can use. */
 
-  var i,
+  var i, k, c,
     account,
     nextConfig,
     continueExec,
-    toBlock = req.body.blockthis.replace(/\u202c/g, "").trim(); // Weird invisible character 8236 sometimes needs to be removed;
+    toBlockParam = req.body.blockthis,
+    toBlock = '';
+
+  // Only use characters from toBlockParam that are usable in a Twitter handle. 
+  // This should remove all invisible characters that get added by copying and pasting from different Twitter clients.
+  for (k = 0; k < toBlockParam.length; k++) {
+    c = toBlockParam[k];
+    if (/[_a-zA-Z0-9]/.test(c)) {
+      toBlock += c;
+    }
+  }
+  console.log("toBlock param is " + toBlockParam.length + " characters: ---" + toBlockParam + "---");
+  console.log("toBlock is " + toBlock.length + " characters: ---" + toBlock + "---");
 
   (errors = []), (results = []);
-
+  
   continueExec = function() {
     console.log(
       "errors: " +
