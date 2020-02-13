@@ -1,4 +1,4 @@
-// 1.13 Uses a big dark form to block a user from many accounts, redirects to form after, handles some invisible weird characters.
+// 1.14 Uses a big dark form to block a user from many accounts, redirects to form after, handles some invisible weird characters.
 
 var helpers = require(__dirname + "/helpers.js"),
   Twit = require("twit");
